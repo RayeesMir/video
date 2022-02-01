@@ -5,7 +5,11 @@ const expectError = require("../drivers/expectError");
 const {
   videoPayload,
   createVideo,
+  createAndReturnVideo,
   updateVideo,
+  fetchVideos,
+  listVideos,
+  updateViews,
 } = require("../drivers/video")();
 
 describe("/video", function () {
@@ -367,4 +371,162 @@ describe("/video", function () {
       });
     });
   });
+
+  describe("GET", () => {
+    it("should return list of video", async () => {
+      const response = await fetchVideos();
+
+      expect(response.status).to.equal(200);
+
+      const { videos, totalCount, pageCount, limit } = await response.json();
+
+      expect(totalCount).to.not.be.undefined;
+      expect(totalCount).to.be.a("number");
+
+      expect(pageCount).to.not.be.undefined;
+      expect(pageCount).to.be.a("number");
+
+      expect(limit).to.not.be.undefined;
+      expect(limit).to.be.a("number");
+
+      expect(videos).to.not.be.undefined;
+      expect(videos).to.be.an("array");
+
+      expect(videos.every((video) => video.id !== undefined)).to.equal(true);
+
+      expect(videos.every(({ name }) => name !== undefined)).to.equal(true);
+    });
+    describe("filters", () => {
+      describe("isPrivate", () => {
+        it("should filter public videos only", async () => {
+          const { videos } = await listVideos("isPrivate=bool:false");
+          expect(videos.every((video) => video.isPrivate === false)).to.equal(
+            true
+          );
+        });
+      });
+      describe("timesViewed", () => {
+        describe("exact", () => {
+          it("should filter videos with exact 10 views", async () => {
+            const { id } = await createAndReturnVideo();
+            await updateViews(id, 10);
+            const { videos } = await listVideos("timesViewed=exact:10");
+            expect(
+              videos.every(({ timesViewed }) => timesViewed === 10)
+            ).to.equal(true);
+          });
+        });
+        describe("gt", () => {
+          it("should filter videos with gt 10 views", async () => {
+            const { id } = await createAndReturnVideo();
+            await updateViews(id, 11);
+            const { videos } = await listVideos("timesViewed=gt:10");
+            expect(
+              videos.every(({ timesViewed }) => timesViewed > 10)
+            ).to.equal(true);
+          });
+        });
+        describe("gte", () => {
+          it("should filter videos with gte 10 views", async () => {
+            const { id } = await createAndReturnVideo();
+            await updateViews(id, 10);
+            await updateViews(id, 11);
+            const { videos } = await listVideos("timesViewed=gte:10");
+            expect(
+              videos.every(({ timesViewed }) => timesViewed >= 10)
+            ).to.equal(true);
+          });
+        });
+        describe("lt", () => {
+          it("should filter videos with lt 10 views", async () => {
+            const { id } = await createAndReturnVideo();
+            await updateViews(id, 9);
+            const { videos } = await listVideos("timesViewed=lt:10");
+            expect(
+              videos.every(({ timesViewed }) => timesViewed < 10)
+            ).to.equal(true);
+          });
+        });
+        describe("lte", () => {
+          it("should filter videos with lte 10 views", async () => {
+            const { id } = await createAndReturnVideo();
+            await updateViews(id, 9);
+            await updateViews(id, 10);
+            const { videos } = await listVideos("timesViewed=lte:10");
+            expect(
+              videos.every(({ timesViewed }) => timesViewed <= 10)
+            ).to.equal(true);
+          });
+        });
+      });
+      describe("meta", () => {
+        it("should return correct filter", async () => {
+          const { isPrivate } = await listVideos("isPrivate=bool:true");
+          expect(isPrivate).to.deep.equal([{ filter: "bool", value: "true" }]);
+        });
+      });
+    });
+    describe("pagination", () => {
+      it("should return 20 video by default", async () => {
+        const { limit, videos } = await listVideos();
+        expect(limit).to.equal(20);
+        expect(videos.length).lte(20);
+      });
+
+      it("should return 10 videos when limit is set to 10", async () => {
+        const { videos, limit } = await listVideos("limit=10");
+        expect(limit).to.equal(10);
+        expect(videos.length).to.lte(10);
+      });
+
+      it("should return empty videos array when limit is set to 0", async () => {
+        const { videos, limit } = await listVideos("limit=0");
+        expect(videos.length).to.equal(0);
+        expect(limit).to.equal(0);
+      });
+
+      it("should return first page by default", async () => {
+        const { page } = await listVideos();
+        expect(page).to.equal(0);
+      });
+
+      it("should return same exact page when changing page", async () => {
+        const { videos: firstPageVideos } = await listVideos("limit=6");
+        const lastVideoOfFirstPage = firstPageVideos[5];
+        const { videos: secondPageVideos } = await listVideos("limit=5&page=1");
+        const firstVideoOfSecondPage = secondPageVideos[0];
+        expect(lastVideoOfFirstPage).to.deep.equal(firstVideoOfSecondPage);
+      });
+
+      describe("meta", () => {
+        it("should return correct limit", async () => {
+          const { limit } = await listVideos("limit=3");
+          expect(limit).to.equal(3);
+        });
+
+        it("should return correct page", async () => {
+          const { page } = await listVideos("page=3");
+          expect(page).to.equal(3);
+        });
+
+        it("should return correct filter", async () => {
+          const { isPrivate } = await listVideos("isPrivate=bool:true");
+          expect(isPrivate).to.deep.equal([{ filter: "bool", value: "true" }]);
+        });
+
+        it("should return correct page count", async () => {
+          const { pageCount, limit, totalCount } = await listVideos("limit=10");
+          expect(pageCount).to.equal(Math.ceil(totalCount / limit));
+        });
+
+        it("should return correct total count after video is created", async () => {
+          const { totalCount: firstTotalCount } = await listVideos();
+          await createAndReturnVideo();
+          const { totalCount: secondTotalCount } = await listVideos();
+          expect(secondTotalCount).to.be.eq(firstTotalCount + 1);
+        });
+      });
+    });
+  });
+
 });

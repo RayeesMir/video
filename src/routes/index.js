@@ -7,9 +7,42 @@ const videoSchema = require("../schemas/video.json");
 const create = require("../daos/video/create");
 const update = require("../daos/video/update");
 
+const list = require("../daos/video/list");
+const count = require("../daos/video/count");
+
+const { getPaginationParams, getPageCount, getFilter } = require("../query");
+
 const { VideoNotFoundError } = require("../daos/video/errors");
 const NotFoundError = require("../errors/notFound");
+const { enumerable, bool } = require("../query/filters");
+const createFilters = require("../query/createFilters");
 
+router.get(
+  "/",
+  asyncHandler(async (req, res) => {
+    const { page, limit } = getPaginationParams(req.url);
+    const filters = createFilters(
+      req.url,
+      bool("isPrivate"),
+      enumerable("timesViewed")
+    );
+
+    const [videos, totalCount] = await Promise.all([
+      list({ filters, page, limit }),
+      count(filters),
+    ]);
+
+    return res.json({
+      videos,
+      totalCount,
+      limit,
+      pageCount: getPageCount(totalCount, limit),
+      page,
+      isPrivate: getFilter("isPrivate", filters),
+      timesViewed: getFilter("timesViewed", filters),
+    });
+  })
+);
 
 router.post(
   "/",

@@ -1,4 +1,8 @@
 const fetch = require("isomorphic-fetch");
+const { getPool } = require("../../src/database/pool");
+const buildQuery = require("../../src/database/buildQuery");
+
+const SQL = require("sql-template-strings");
 
 module.exports = ({ host = "http://localhost", port = 3000 } = {}) => {
   const baseUri = `${host}:${port}`;
@@ -59,6 +63,16 @@ module.exports = ({ host = "http://localhost", port = 3000 } = {}) => {
 
   const updateVideo = (id, video) => update("/video", id, video);
 
+  const updateViews = async (id, count, connection = getPool()) => {
+    await connection.query(
+      buildQuery(
+        SQL` UPDATE tbl_view_counter `,
+        SQL` SET times_viewed= ${count} `,
+        SQL` WHERE video_id = ${id}`
+      )
+    );
+  };
+
   const deleteVideo = (id) => remove("/video", id);
 
   return {
@@ -68,6 +82,7 @@ module.exports = ({ host = "http://localhost", port = 3000 } = {}) => {
     updateVideo,
     fetchVideos,
     listVideos,
+    updateViews,
     deleteVideo,
   };
 };
