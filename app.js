@@ -6,8 +6,9 @@ const { connect, disconnect } = require("./src/database/pool");
 const errorMiddleware = require("./src/middlewares/error");
 const traceIdMiddleware = require("./src/middlewares/traceId");
 
-const notFoundRoute = require("./src/errors/notFound");
+const notFoundRoute = require("./src/middlewares/notFound");
 const healthCheckRouter = require("./src/routes/healthCheck");
+const videoRouter = require("./src/routes/index");
 
 const host = process.env.DB_HOST;
 const dbPort = process.env.DB_PORT;
@@ -22,6 +23,7 @@ const createApp = () => {
 
   const routes = {
     "/health": healthCheckRouter,
+    "/video": videoRouter,
   };
 
   map(routes, (router, route) => app.use(route, router));

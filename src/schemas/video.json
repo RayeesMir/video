@@ -1,0 +1,10 @@
+{
+  "required": ["name", "url", "thumbnailUrl", "isPrivate"],
+  "additionalProperties": false,
+  "properties": {
+    "name": { "type": "string", "minLength": 3, "maxLength": 255 },
+    "url": { "type": "string", "format": "url", "maxLength": 255 },
+    "thumbnailUrl": { "type": "string", "format": "url", "maxLength": 255 },
+    "isPrivate": { "type": "boolean" }
+  }
+}
