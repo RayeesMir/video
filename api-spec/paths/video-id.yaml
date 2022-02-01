@@ -1,0 +1,61 @@
+put:
+  summary: 'Update an existing video'
+  description: 'Put video details'
+  security:
+    - Authorization: []
+  consumes:
+    - 'application/json'
+  produces:
+    - 'application/json'
+  parameters:
+    - in: path
+      name: id
+      required: true
+      type: number
+    - in: body
+      name: 'body'
+      required: true
+      schema:
+        $ref: '#/definitions/NewVideo'
+  responses:
+    200:
+      description: 'Video updated'
+      schema:
+        $ref: '#/definitions/Video'
+    400:
+      description: 'Bad request - body did not pass schema validation'
+      schema:
+        $ref: '#/definitions/ErrorResponse'
+    404:
+      description: 'Video not found'
+      schema:
+        $ref: '#/definitions/ErrorResponse'
+    500:
+      description: 'Internal server error'
+      schema:
+        $ref: '#/definitions/ErrorResponse'
+delete:
+  summary: 'Delete an existing video'
+  description: 'Delete video'
+  security:
+    - Authorization: []
+  consumes:
+    - 'application/json'
+  produces:
+    - 'application/json'
+  parameters:
+    - in: path
+      name: id
+      required: true
+      type: number
+  responses:
+    204:
+      description: 'Video deleted'
+    404:
+      description: 'Video not found'
+      schema:
+        $ref: '#/definitions/ErrorResponse'
+    500:
+      description: 'Internal server error'
+      schema:
+        $ref: '#/definitions/ErrorResponse'

@@ -1,0 +1,91 @@
+get:
+  summary: 'List videos'
+  description: 'Get list of videos'
+  security:
+    - Authorization: []
+  parameters:
+    - in: query
+      name: page
+      type: number
+      description: 'Current page number'
+    - in: query
+      name: limit
+      type: number
+      description: 'Length of the dataset'
+    - in: query
+      name: isPrivate
+      type: boolean
+      description: 'Filter videos by accessiblity. Valid filter is "bool" i.e. isPrivate=bool:true'
+    - in: query
+      name: timesViewed
+      type: number
+      description: 'Filter videos by view count. Valid filter are "exact", "gt", "gte", "lt", "lte"  i.e. timesViewed=exact:42'
+  produces:
+    - 'application/json'
+  responses:
+    200:
+      description: 'Object containing videos and their metadata'
+      schema:
+        type: object
+        properties:
+          videos:
+            type: array
+            items:
+              $ref: '#/definitions/Video'
+          totalCount:
+            type: integer
+            example: 120
+          pageCount:
+            type: integer
+            example: 6
+          limit:
+            type: integer
+            example: 20
+          page:
+            type: integer
+            example: 1
+          isPrivate:
+            type: array
+            items:
+              $ref: '#/definitions/RhsMetadata'
+          timesViewed:
+            type: array
+            items:
+              $ref: '#/definitions/RhsMetadata'
+    400:
+      description: 'Bad request - failed to parse some of the query parameters'
+      schema:
+        $ref: '#/definitions/ErrorResponse'
+    500:
+      description: 'Internal server error'
+      schema:
+        $ref: '#/definitions/ErrorResponse'
+
+post:
+  summary: 'Create a new video'
+  description: 'Post video details'
+  security:
+    - Authorization: []
+  consumes:
+    - 'application/json'
+  produces:
+    - 'application/json'
+  parameters:
+    - in: body
+      name: body
+      required: true
+      schema:
+        $ref: '#/definitions/NewVideo'
+  responses:
+    201:
+      description: 'New video created'
+      schema:
+        $ref: '#/definitions/Video'
+    400:
+      description: 'Bad request - body did not pass schema validation'
+      schema:
+        $ref: '#/definitions/ErrorResponse'
+    500:
+      description: 'Internal server error'
+      schema:
+        $ref: '#/definitions/ErrorResponse'

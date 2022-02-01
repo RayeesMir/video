@@ -1,0 +1,24 @@
+swagger: '2.0'
+info:
+  description: 'Video Service API'
+  version: '1.0'
+  title: 'Video API'
+  contact: {}
+host: 'video.tldv.com'
+basePath: '/'
+schemes:
+  - 'https'
+consumes:
+  - 'application/json'
+produces:
+  - 'application/json'
+paths:
+  $ref: ./api-spec/paths/index.yaml
+securityDefinitions:
+  Authorization:
+    description: 'Valid JWT token is required for this endpoint'
+    type: 'apiKey'
+    name: 'Authorization Bearer'
+    in: 'header'
+definitions:
+  $ref: ./api-spec/definitions/index.yaml

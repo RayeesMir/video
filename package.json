@@ -1,0 +1,16 @@
+{
+  "name": "video-api",
+  "version": "1.0.0",
+  "description": "Video api",
+  "main": "index.js",
+  "scripts": {
+    "test": "",
+    "generate-spec": "multi-file-swagger -o yaml api-spec/swagger.yaml > api-spec/generated-spec.yaml"
+  },
+  "keywords": [],
+  "author": "Mir Rayees",
+  "license": "ISC",
+  "devDependencies": {
+    "multi-file-swagger": "^2.3.0"
+  }
+}

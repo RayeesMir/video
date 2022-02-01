@@ -1,0 +1,8 @@
+NewVideo:
+  $ref: ./new-video.yaml
+Video:
+  $ref: ./video.yaml
+ErrorResponse:
+  $ref: ./error-response.yaml
+RhsMetadata:
+  $ref: ./rhs-metadata.yaml

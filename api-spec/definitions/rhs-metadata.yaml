@@ -1,0 +1,13 @@
+type: object
+properties:
+  filter:
+    type: string
+    description: 'Requested filter (exact, contains, gt, gte, lt, lte)'
+    example: 'filterCondition'
+  value:
+    type: string
+    description: 'Requested value for filter'
+    example: 'filterValue'
+required:
+  - 'filter'
+  - 'value'

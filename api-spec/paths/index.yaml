@@ -1,0 +1,4 @@
+/video:
+  $ref: ./video.yaml
+/video/{id}:
+  $ref: ./video-id.yaml

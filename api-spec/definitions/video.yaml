@@ -1,0 +1,41 @@
+type: object
+required:
+  - 'id'
+  - 'name'
+  - 'url'
+  - 'thumbnailUrl'
+  - 'isPrivate'
+properties:
+  id: 
+    type: number
+    description: 'Video id'
+    example: 1231
+  name:
+    type: string
+    description: 'Name of the video'
+    example: '1 on 1 meeting with CTO'
+  url:
+    type: string
+    description: 'Url of the video'
+    example: 'https://videolink.storage.com'
+  thumbnailUrl:
+    type: string
+    description: 'Thumbnail url of the video'
+    example: 'https://thumbnail.videolink.storage.com'
+  isPrivate:
+    type: boolean
+    description: 'Boolean value to inform if video is private or public'
+    example: false
+  timesViewed:
+    type: number
+    description: 'Number of times video is viewed'
+    example: 1000
+  createdAt:
+    type: string
+    description: 'Creation Datetime of video'
+    example: '2022-02-01 17:04:15'
+  updatedAt:
+    type: string
+    description: 'Datetime when video was updated'
+    example: '2022-02-01 17:04:15'
+

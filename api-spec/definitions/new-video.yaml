@@ -1,0 +1,23 @@
+type: object
+required:
+  - 'name'
+  - 'url'
+  - 'thumbnailUrl'
+  - 'isPrivate'
+properties:
+  name:
+    type: string
+    description: 'Tag name'
+    example: 'Some Tag'
+  url:
+    type: string
+    description: 'Url of the video'
+    example: 'https://videolink.storage.com'
+  thumbnailUrl:
+    type: string
+    description: 'Thumbnail url of the video'
+    example: 'https://thumbnail.videolink.storage.com'
+  isPrivate:
+    type: boolean
+    description: 'Boolean value to inform if video is private or public'
+    example: false

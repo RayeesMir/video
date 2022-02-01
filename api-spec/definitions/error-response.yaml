@@ -1,0 +1,13 @@
+type: object
+properties:
+  errorCode:
+    type: number
+    description: 'Error code for debugging'
+    example: -101
+  message:
+    type: string
+    description: 'Error message'
+  traceId:
+    type: string
+    description: 'Randomly generated ID for requests'
+    example: 'b30d919c-6491-491e-a5e4-6222ef0b32e4'

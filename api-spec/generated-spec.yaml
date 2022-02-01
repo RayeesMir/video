@@ -1,0 +1,273 @@
+swagger: '2.0'
+info:
+  description: Video Service API
+  version: '1.0'
+  title: Video API
+  contact: {}
+host: video.tldv.com
+basePath: /
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /video:
+    get:
+      summary: List videos
+      description: Get list of videos
+      security:
+        - Authorization: []
+      parameters:
+        - in: query
+          name: page
+          type: number
+          description: Current page number
+        - in: query
+          name: limit
+          type: number
+          description: Length of the dataset
+        - in: query
+          name: isPrivate
+          type: boolean
+          description: >-
+            Filter videos by accessiblity. Valid filter is "bool" i.e.
+            isPrivate=bool:true
+        - in: query
+          name: timesViewed
+          type: number
+          description: >-
+            Filter videos by view count. Valid filter are "exact", "gt", "gte",
+            "lt", "lte"  i.e. timesViewed=exact:42
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Object containing videos and their metadata
+          schema:
+            type: object
+            properties:
+              videos:
+                type: array
+                items:
+                  $ref: '#/definitions/Video'
+              totalCount:
+                type: integer
+                example: 120
+              pageCount:
+                type: integer
+                example: 6
+              limit:
+                type: integer
+                example: 20
+              page:
+                type: integer
+                example: 1
+              isPrivate:
+                type: array
+                items:
+                  $ref: '#/definitions/RhsMetadata'
+              timesViewed:
+                type: array
+                items:
+                  $ref: '#/definitions/RhsMetadata'
+        '400':
+          description: Bad request - failed to parse some of the query parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      summary: Create a new video
+      description: Post video details
+      security:
+        - Authorization: []
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/NewVideo'
+      responses:
+        '201':
+          description: New video created
+          schema:
+            $ref: '#/definitions/Video'
+        '400':
+          description: Bad request - body did not pass schema validation
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/video/{id}':
+    put:
+      summary: Update an existing video
+      description: Put video details
+      security:
+        - Authorization: []
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: number
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/NewVideo'
+      responses:
+        '200':
+          description: Video updated
+          schema:
+            $ref: '#/definitions/Video'
+        '400':
+          description: Bad request - body did not pass schema validation
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Video not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    delete:
+      summary: Delete an existing video
+      description: Delete video
+      security:
+        - Authorization: []
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: number
+      responses:
+        '204':
+          description: Video deleted
+        '404':
+          description: Video not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+securityDefinitions:
+  Authorization:
+    description: Valid JWT token is required for this endpoint
+    type: apiKey
+    name: Authorization Bearer
+    in: header
+definitions:
+  NewVideo:
+    type: object
+    required:
+      - name
+      - url
+      - thumbnailUrl
+      - isPrivate
+    properties:
+      name:
+        type: string
+        description: Tag name
+        example: Some Tag
+      url:
+        type: string
+        description: Url of the video
+        example: 'https://videolink.storage.com'
+      thumbnailUrl:
+        type: string
+        description: Thumbnail url of the video
+        example: 'https://thumbnail.videolink.storage.com'
+      isPrivate:
+        type: boolean
+        description: Boolean value to inform if video is private or public
+        example: false
+  Video:
+    type: object
+    required:
+      - id
+      - name
+      - url
+      - thumbnailUrl
+      - isPrivate
+    properties:
+      id:
+        type: number
+        description: Video id
+        example: 1231
+      name:
+        type: string
+        description: Name of the video
+        example: 1 on 1 meeting with CTO
+      url:
+        type: string
+        description: Url of the video
+        example: 'https://videolink.storage.com'
+      thumbnailUrl:
+        type: string
+        description: Thumbnail url of the video
+        example: 'https://thumbnail.videolink.storage.com'
+      isPrivate:
+        type: boolean
+        description: Boolean value to inform if video is private or public
+        example: false
+      timesViewed:
+        type: number
+        description: Number of times video is viewed
+        example: 1000
+      createdAt:
+        type: string
+        description: Creation Datetime of video
+        example: '2022-02-01 17:04:15'
+      updatedAt:
+        type: string
+        description: Datetime when video was updated
+        example: '2022-02-01 17:04:15'
+  ErrorResponse:
+    type: object
+    properties:
+      errorCode:
+        type: number
+        description: Error code for debugging
+        example: -101
+      message:
+        type: string
+        description: Error message
+      traceId:
+        type: string
+        description: Randomly generated ID for requests
+        example: b30d919c-6491-491e-a5e4-6222ef0b32e4
+  RhsMetadata:
+    type: object
+    properties:
+      filter:
+        type: string
+        description: 'Requested filter (exact, contains, gt, gte, lt, lte)'
+        example: filterCondition
+      value:
+        type: string
+        description: Requested value for filter
+        example: filterValue
+    required:
+      - filter
+      - value
+
