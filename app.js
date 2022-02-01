@@ -1,3 +1,4 @@
+const config = require("config");
 const express = require("express");
 const bodyParser = require("body-parser");
 const { map } = require("lodash");
@@ -8,7 +9,7 @@ const traceIdMiddleware = require("./src/middlewares/traceId");
 
 const notFoundRoute = require("./src/middlewares/notFound");
 const healthCheckRouter = require("./src/routes/healthCheck");
-const videoRouter = require("./src/routes/index");
+const videoRouter = require("./src/routes");
 
 const host = process.env.DB_HOST;
 const dbPort = process.env.DB_PORT;

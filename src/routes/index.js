@@ -6,6 +6,7 @@ const videoSchema = require("../schemas/video.json");
 
 const create = require("../daos/video/create");
 const update = require("../daos/video/update");
+const remove = require("../daos/video/delete");
 
 const list = require("../daos/video/list");
 const count = require("../daos/video/count");
@@ -93,5 +94,24 @@ router.put(
   })
 );
 
+router.delete(
+  "/:id",
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      await remove(id);
+
+      res.status(204).send();
+    } catch (error) {
+      switch (error.constructor) {
+        case VideoNotFoundError:
+          throw new NotFoundError(-107);
+        default:
+          throw error;
+      }
+    }
+  })
+);
 
 module.exports = router;

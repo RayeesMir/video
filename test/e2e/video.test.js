@@ -10,6 +10,7 @@ const {
   fetchVideos,
   listVideos,
   updateViews,
+  deleteVideo,
 } = require("../drivers/video")();
 
 describe("/video", function () {
@@ -529,4 +530,22 @@ describe("/video", function () {
     });
   });
 
+  describe("DELETE", () => {
+    it("should delete video", async () => {
+      const { id } = await createAndReturnVideo();
+      const response = await deleteVideo(id);
+      expect(response.status).to.equal(204);
+    });
+
+    describe("errors", () => {
+      it("should return 404 for non existant video", async () => {
+        await expectError({
+          expectedStatusCode: 404,
+          expectedCode: -107,
+          expectedMessage: "Not Found",
+          response: await deleteVideo(-1),
+        });
+      });
+    });
+  });
 });
