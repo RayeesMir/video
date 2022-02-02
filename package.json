@@ -4,6 +4,7 @@
   "description": "Video api",
   "main": "index.js",
   "scripts": {
+    "start": "node boot.js",
     "test": "NODE_ENV=test run.env mocha 'test/**/*.test.js'",
     "generate-spec": "multi-file-swagger -o yaml api-spec/swagger.yaml > api-spec/generated-spec.yaml"
   },

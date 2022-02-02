@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - $APP_LOCAL_PORT:$APP_DOCKER_PORT
+    depends_on:
+      - mysqldb
+    restart: always
+    env_file: ./.env
+    environment:
+      - ENV=$ENV
+      - DB_HOST=$DB_HOST
+      - DB_PORT=$DB_PORT
+      - DB_USER=$DB_USER
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_NAME=$DB_SCHEMA
+  mysqldb:
+    image: mysql:5.7
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD:$DB_PASSWORD
+      - MYSQL_DATABASE:$DB_SCHEMA
+    ports:
+      - $MYSQLDB_LOCAL_PORT:$DB_PORT
+    volumes:
+      - db:/var/lib/mysql
+volumes: 
+  db:
