@@ -13,7 +13,7 @@ const {
   deleteVideo,
 } = require("../drivers/video")();
 
-describe("/video", function () {
+describe.skip("/video", function () {
   let server;
 
   before(async () => {

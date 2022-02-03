@@ -3,6 +3,9 @@ const { getPool } = require("../../src/database/pool");
 const buildQuery = require("../../src/database/buildQuery");
 
 const SQL = require("sql-template-strings");
+const Chance = require("chance");
+const { range } = require("lodash");
+const chance = new Chance();
 
 module.exports = ({ host = "http://localhost", port = 3000 } = {}) => {
   const baseUri = `${host}:${port}`;
@@ -75,6 +78,19 @@ module.exports = ({ host = "http://localhost", port = 3000 } = {}) => {
 
   const deleteVideo = (id) => remove("/video", id);
 
+  const seed = async (count) => {
+    await Promise.all(
+      range(0, count).map(() =>
+        createVideo({
+          name: chance.name(),
+          url: chance.url(),
+          thumbnailUrl: chance.url(),
+          isPrivate: chance.bool(),
+        })
+      )
+    );
+  };
+
   return {
     videoPayload,
     createVideo,
@@ -84,5 +100,6 @@ module.exports = ({ host = "http://localhost", port = 3000 } = {}) => {
     listVideos,
     updateViews,
     deleteVideo,
+    seed,
   };
 };

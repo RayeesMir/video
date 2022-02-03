@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node boot.js",
+    "seed": "run.env node ./seed/index.js",
     "test": "NODE_ENV=test run.env mocha 'test/**/*.test.js'",
     "generate-spec": "multi-file-swagger -o yaml api-spec/swagger.yaml > api-spec/generated-spec.yaml"
   },
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "chai": "^4.3.6",
+    "chance": "^1.1.8",
     "isomorphic-fetch": "^3.0.0",
     "mocha": "^9.2.0",
     "multi-file-swagger": "^2.3.0",
