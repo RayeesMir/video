@@ -6,7 +6,8 @@ Requirement:
 
 API Spec: Api Spec is provided inside api-spec directory. i have used swagger for creating api spec.
 
-Test Cases: I have covered majority of test cases please run ```sh
+Test Cases: I have covered majority of test cases please run 
+```sh
 npm test
 ```
 
