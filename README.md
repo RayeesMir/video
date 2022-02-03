@@ -4,14 +4,17 @@ Requirement:
 * [Node] LTS version
 * [MySql] 5.7
 
-API Spec: Api Spec is provided inside api-spec directory. i have used swagger for creating api spec.
+##API Spec:  Api Spec is provided inside api-spec directory. i have used swagger for creating api spec. To view spec please copy generated-spec.yaml to editor.swagger.io or use vscode plugin to visualize api spec.
 
-Test Cases: I have covered majority of test cases please run 
+
+
+##Test Cases: I have covered majority of test cases please run 
+
 ```sh
 npm test
 ```
 
-Starting app :
+##Starting app :
 
 ```sh
 docker-compose up
