@@ -8,7 +8,9 @@ Requirement:
 
 
 
-## Test Cases: I have covered majority of test cases please run 
+## Test Cases: 
+
+I have covered majority of test cases please run 
 
 ```sh
 npm test
@@ -16,11 +18,11 @@ npm test
 
 ## Starting app :
 
+The will Init DB and seed with dummy data. 
+
 ```sh
 docker-compose up
 ```
-
-The will Init DB and seed with dummy data. 
 
 I have included seed data in sql file but there is js script as well that leverage api to seed db.
 
