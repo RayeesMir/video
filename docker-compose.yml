@@ -4,28 +4,22 @@ services:
   app:
     build: .
     ports:
-      - $APP_LOCAL_PORT:$APP_DOCKER_PORT
+      - 80:3000
     depends_on:
-      - mysqldb
+      - db
     restart: always
     env_file: ./.env
-    environment:
-      - ENV=$ENV
-      - DB_HOST=$DB_HOST
-      - DB_PORT=$DB_PORT
-      - DB_USER=$DB_USER
-      - DB_PASSWORD=$DB_PASSWORD
-      - DB_NAME=$DB_SCHEMA
-  mysqldb:
+  db:
     image: mysql:5.7
-    restart: unless-stopped
-    env_file: ./.env
-    environment:
-      - MYSQL_ROOT_PASSWORD:$DB_PASSWORD
-      - MYSQL_DATABASE:$DB_SCHEMA
     ports:
-      - $MYSQLDB_LOCAL_PORT:$DB_PORT
+      - 3306:3306
+    restart: unless-stopped
+    environment:
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: video
     volumes:
+      - ./db-scripts:/docker-entrypoint-initdb.d
       - db:/var/lib/mysql
 volumes: 
   db:
