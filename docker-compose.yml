@@ -9,15 +9,16 @@ services:
       - db
     restart: always
     env_file: ./.env
+    environment:
+      DB_HOST: db
   db:
     image: mysql:5.7
     ports:
-      - 3306:3306
+      - $DB_PORT:$DB_PORT
     restart: unless-stopped
     environment:
-      MYSQL_USER: root
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: video
+      MYSQL_ROOT_PASSWORD: $DB_PASSWORD
+      MYSQL_DATABASE: $DB_SCHEMA
     volumes:
       - ./db-scripts:/docker-entrypoint-initdb.d
       - db:/var/lib/mysql

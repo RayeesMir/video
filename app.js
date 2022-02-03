@@ -1,8 +1,21 @@
-const config = require("config");
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const { map } = require("lodash");
 
+const host = process.env.DB_HOST;
+const dbPort = process.env.DB_PORT;
+const user = process.env.DB_USER;
+const password = process.env.DB_PASSWORD;
+const database = process.env.DB_SCHEMA;
+
+console.log("configurations ",{
+  host,
+  dbPort,
+  user,
+  password,
+  database
+})
 const { connect, disconnect } = require("./src/database/pool");
 const errorMiddleware = require("./src/middlewares/error");
 const traceIdMiddleware = require("./src/middlewares/traceId");
@@ -11,11 +24,7 @@ const notFoundRoute = require("./src/middlewares/notFound");
 const healthCheckRouter = require("./src/routes/healthCheck");
 const videoRouter = require("./src/routes");
 
-const host = process.env.DB_HOST;
-const dbPort = process.env.DB_PORT;
-const user = process.env.DB_USER;
-const password = process.env.DB_PASSWORD;
-const database = process.env.DB_SCHEMA;
+
 
 const createApp = () => {
   const app = express();
