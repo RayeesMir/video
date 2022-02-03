@@ -8,13 +8,13 @@ Requirement:
 
 
 
-##Test Cases: I have covered majority of test cases please run 
+## Test Cases: I have covered majority of test cases please run 
 
 ```sh
 npm test
 ```
 
-##Starting app :
+## Starting app :
 
 ```sh
 docker-compose up
